@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>To-Do App with Folders</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Intro Screen -->
+  <div id="intro-screen">
+    <h1>Welcome to the To-Do App</h1>
+    <button onclick="showFolderDashboard()">Start Organizing</button>
+  </div>
+
+  <!-- Folder Dashboard -->
+  <div id="folder-dashboard" style="display:none;">
+    <h2>Your Folders</h2>
+    <div id="folder-grid"></div>
+    <input type="text" id="folder-name" placeholder="New Folder Name" />
+    <button onclick="addFolder()">Create Folder</button>
+  </div>
+
+  <!-- To-Do List View -->
+  <div id="todo-view" style="display:none;">
+    <button onclick="goBackToFolders()">← Back to Folders</button>
+    <h2 id="folder-title"></h2>
+    <input type="text" id="input-box" placeholder="Add a new task" />
+    <button id="input-button" onclick="addTask()">Add</button>
+    <ul id="lists"></ul>
+    <hr />
+    <div class="counter">
+      Completed: <span id="completed-count">0</span> | Uncompleted: <span id="uncompleted-count">0</span>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

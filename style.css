@@ -1,0 +1,58 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: rgb(105, 85, 12);
+  margin: 0;
+  padding: 20px;
+}
+#intro-screen, #folder-dashboard, #todo-view {
+  width: 95vh;         /* 4:3 ratio width based on viewport height */
+  height: 95vh;       /* full viewport height */
+  margin: auto;        /* center horizontally & vertically */
+  padding: 20px;
+  background: rgb(204, 203, 174);
+  border-radius: 15px;
+  box-shadow: 0 0 10px #aaa;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+button {
+  padding: 10px 15px;
+  margin-top: 10px;
+  background-color: #2e60ea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+input[type="text"] {
+  padding: 10px;
+  width: 60%;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#folder-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.folder-card {
+  background-color: #ffd95a;
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 120px;
+  font-weight: bold;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
