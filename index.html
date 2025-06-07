@@ -14,13 +14,16 @@
     <button onclick="showFolderDashboard()">Start Organizing</button>
   </div>
 
-  <!-- Folder Dashboard -->
-  <div id="folder-dashboard" style="display:none;">
-    <h2>Your Folders</h2>
-    <div id="folder-grid"></div>
-    <input type="text" id="folder-name" placeholder="New Folder Name" />
-    <button onclick="addFolder()">Create Folder</button>
-  </div>
+ <div id="folder-dashboard" style="display:none;">
+  <h2>Your Folders</h2>
+  <div id="folder-grid"></div>
+  <p id="no-folders-msg" style="display:none; color: #555; font-style: italic; margin-top: 10px;">
+    No folders yet. Create one below!
+  </p>
+  <input type="text" id="folder-name" placeholder="New Folder Name" />
+  <button onclick="addFolder()">Create Folder</button>
+</div>
+
 
   <!-- To-Do List View -->
   <div id="todo-view" style="display:none;">

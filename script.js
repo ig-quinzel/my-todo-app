@@ -7,7 +7,6 @@ const folderTitle = document.getElementById("folder-title");
 
 let currentFolder = null;
 
-// Show views
 function showFolderDashboard() {
   document.getElementById("intro-screen").style.display = "none";
   document.getElementById("folder-dashboard").style.display = "block";
@@ -29,7 +28,6 @@ function goBackToFolders() {
   loadFolderCards();
 }
 
-// Folder logic
 function addFolder() {
   const name = document.getElementById('folder-name').value.trim();
   if (!name) return alert("Folder name is empty.");
@@ -44,92 +42,65 @@ function addFolder() {
 function loadFolderCards() {
   folderGrid.innerHTML = "";
   const folders = JSON.parse(localStorage.getItem("folders") || "[]");
-  folders.forEach(folder => {
-    const div = document.createElement("div");
-    div.className = "folder-card";
-    div.textContent = folder;
-    div.onclick = () => openFolder(folder);
-    folderGrid.appendChild(div);
-  });
+
+  const noFoldersMsg = document.getElementById("no-folders-msg");
+
+  if (folders.length === 0) {
+    noFoldersMsg.style.display = "block";
+  } else {
+    noFoldersMsg.style.display = "none";
+    folders.forEach(folder => {
+      const div = document.createElement("div");
+      div.className = "folder-card";
+
+      const folderNameSpan = document.createElement("span");
+      folderNameSpan.textContent = folder;
+      folderNameSpan.style.cursor = "pointer";
+      folderNameSpan.onclick = () => openFolder(folder);
+      div.appendChild(folderNameSpan);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.style.marginLeft = "10px";
+      deleteBtn.style.backgroundColor = "#e84545";
+      deleteBtn.style.color = "white";
+      deleteBtn.style.border = "none";
+      deleteBtn.style.borderRadius = "3px";
+      deleteBtn.style.padding = "2px 6px";
+      deleteBtn.style.fontSize = "12px";
+      deleteBtn.style.cursor = "pointer";
+      deleteBtn.style.height = "22px";
+
+      deleteBtn.onclick = (e) => {
+        e.stopPropagation();
+        if (confirm(`Delete folder "${folder}"? This will delete all its tasks.`)) {
+          deleteFolder(folder);
+        }
+      };
+      div.appendChild(deleteBtn);
+
+      folderGrid.appendChild(div);
+    });
+  }
 }
 
-// Task logic
-function loadTasks() {
-  listContainer.innerHTML = "";
+function deleteFolder(folderName) {
+  let folders = JSON.parse(localStorage.getItem("folders") || "[]");
+  folders = folders.filter(f => f !== folderName);
+  localStorage.setItem("folders", JSON.stringify(folders));
+
   const allData = JSON.parse(localStorage.getItem("todo-data") || "{}");
-  const tasks = allData[currentFolder] || [];
-  tasks.forEach(task => createTaskElement(task.text, task.completed));
-  updateCounters();
+  if (allData[folderName]) {
+    delete allData[folderName];
+    localStorage.setItem("todo-data", JSON.stringify(allData));
+  }
+
+  loadFolderCards();
+
+  if (currentFolder === folderName) {
+    goBackToFolders();
+  }
 }
 
-function saveTasksToLocalStorage() {
-  const tasks = [];
-  listContainer.querySelectorAll("li").forEach(li => {
-    const taskText = li.querySelector("label span").textContent;
-    const isCompleted = li.classList.contains("completed");
-    tasks.push({ text: taskText, completed: isCompleted });
-  });
-  const allData = JSON.parse(localStorage.getItem("todo-data") || "{}");
-  allData[currentFolder] = tasks;
-  localStorage.setItem("todo-data", JSON.stringify(allData));
-}
-
-function updateCounters() {
-  const completedTasks = document.querySelectorAll(".completed").length;
-  const uncompletedTasks = document.querySelectorAll("li:not(.completed)").length;
-  completedCounter.textContent = completedTasks;
-  uncompletedCounter.textContent = uncompletedTasks;
-}
-
-function createTaskElement(task, isCompleted = false) {
-  const li = document.createElement('li');
-  li.innerHTML = `
-    <label>
-      <input type="checkbox" ${isCompleted ? "checked" : ""}>
-      <span>${task}</span>
-    </label>
-    <span class="edit-btn">Edit</span> 
-    <span class="delete-btn">Delete</span>
-  `;
-  if (isCompleted) li.classList.add("completed");
-  listContainer.appendChild(li);
-
-  const checkbox = li.querySelector("input");
-  const editBtn = li.querySelector(".edit-btn");
-  const deleteBtn = li.querySelector(".delete-btn");
-  const taskSpan = li.querySelector("label span");
-
-  checkbox.addEventListener("click", () => {
-    li.classList.toggle("completed", checkbox.checked);
-    updateCounters();
-    saveTasksToLocalStorage();
-  });
-
-  editBtn.addEventListener("click", () => {
-    const updated = prompt("Edit your task", taskSpan.textContent);
-    if (updated !== null) {
-      taskSpan.textContent = updated;
-      li.classList.remove("completed");
-      checkbox.checked = false;
-      updateCounters();
-      saveTasksToLocalStorage();
-    }
-  });
-
-  deleteBtn.addEventListener("click", () => {
-    if (confirm("Delete this task?")) {
-      li.remove();
-      updateCounters();
-      saveTasksToLocalStorage();
-    }
-  });
-}
-
-function addTask() {
-  const task = inputBox.value.trim();
-  if (!task) return alert("Task is empty.");
-  createTaskElement(task);
-  inputBox.value = "";
-  updateCounters();
-  saveTasksToLocalStorage();
-}
+// Task functions: loadTasks, saveTasksToLocalStorage, updateCounters, createTaskElement, addTask
+// (keep your existing code unchanged here)
