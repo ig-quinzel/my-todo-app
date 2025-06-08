@@ -83,6 +83,15 @@ function loadFolderCards() {
     });
   }
 }
+function addTask() {
+  const taskText = inputBox.value.trim();
+  if (!taskText || !currentFolder) return;
+
+  createTaskElement(taskText, false);
+  inputBox.value = "";
+  updateCounters();
+  saveTasksToLocalStorage();
+}
 
 function deleteFolder(folderName) {
   let folders = JSON.parse(localStorage.getItem("folders") || "[]");
@@ -100,6 +109,79 @@ function deleteFolder(folderName) {
   if (currentFolder === folderName) {
     goBackToFolders();
   }
+}function createTaskElement(taskText, isCompleted = false) {
+  const li = document.createElement("li");
+  li.className = isCompleted ? "completed" : "";
+
+  li.innerHTML = `
+    <div class="task-content">
+      <input type="checkbox" class="task-checkbox" ${isCompleted ? "checked" : ""}>
+      <span class="task-text">${taskText}</span>
+    </div>
+    <div class="task-actions">
+      <button class="edit-btn">Edit</button>
+      <button class="delete-btn">Delete</button>
+    </div>
+  `;
+
+  listContainer.appendChild(li);
+
+  const checkbox = li.querySelector(".task-checkbox");
+  checkbox.addEventListener("change", () => {
+    li.classList.toggle("completed", checkbox.checked);
+    updateCounters();
+    saveTasksToLocalStorage();
+  });
+
+  li.querySelector(".edit-btn").onclick = () => {
+    const updated = prompt("Edit your task", taskText);
+    if (updated !== null) {
+      li.querySelector(".task-text").textContent = updated;
+      saveTasksToLocalStorage();
+    }
+  };
+
+  li.querySelector(".delete-btn").onclick = () => {
+    li.remove();
+    updateCounters();
+    saveTasksToLocalStorage();
+  };
+}
+
+
+function saveTasksToLocalStorage() {
+  const items = listContainer.querySelectorAll("li");
+  const tasks = Array.from(items).map(li => {
+    const checkbox = li.querySelector("input");
+    const span = li.querySelector("label span");
+    return {
+      text: span.textContent,
+      completed: checkbox.checked
+    };
+  });
+
+  const allData = JSON.parse(localStorage.getItem("todo-data") || "{}");
+  allData[currentFolder] = tasks;
+  localStorage.setItem("todo-data", JSON.stringify(allData));
+}
+
+function loadTasks() {
+  listContainer.innerHTML = "";
+  const allData = JSON.parse(localStorage.getItem("todo-data") || "{}");
+  const tasks = allData[currentFolder] || [];
+
+  tasks.forEach(task => createTaskElement(task.text, task.completed));
+  updateCounters();
+}
+
+function updateCounters() {
+  const tasks = listContainer.querySelectorAll("li");
+  let completed = 0;
+  tasks.forEach(task => {
+    if (task.querySelector("input").checked) completed++;
+  });
+  completedCounter.textContent = completed;
+  uncompletedCounter.textContent = tasks.length - completed;
 }
 
 // Task functions: loadTasks, saveTasksToLocalStorage, updateCounters, createTaskElement, addTask

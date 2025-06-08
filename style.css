@@ -56,3 +56,39 @@ input[type="text"] {
   font-weight: bold;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
+.completed span {
+  text-decoration: line-through;
+  color: #888;
+}
+/* Task list item layout */
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ccc;
+  list-style: none;
+  width: 100%;
+  max-width: 500px; /* Optional: limits width */
+  margin: 0 auto;   /* Center the item horizontally */
+}
+
+/* Task text */
+li span {
+  flex: 1;
+  text-align: left;
+  word-break: break-word;
+  margin-right: 10px;
+}
+
+/* Buttons inside tasks */
+li button {
+  margin-left: 5px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background-color: #2e60ea;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
